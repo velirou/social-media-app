@@ -33,7 +33,6 @@ public class UserService {
         user.setUsername(userDetails.getUsername());
         user.setEmail(userDetails.getEmail());
         user.setPassword_hash(userDetails.getPassword_hash());
-        user.setUpdated_at(new Timestamp(System.currentTimeMillis()));
         return userRepository.save(user);
     }
 

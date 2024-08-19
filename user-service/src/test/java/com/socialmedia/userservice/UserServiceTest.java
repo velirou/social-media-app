@@ -35,8 +35,8 @@ public class UserServiceTest {
     @Test
     public void testGetAllUsers() {
         // Arrange
-        User user1 = new User(1L, "alex123", "sarah.jones@example.com", "$2a$10$V6v2wq4JQFV2mQzLWZj2Ou", Timestamp.valueOf("2009-10-13 16:09:23"), Timestamp.valueOf("2009-09-15 12:07:45"));
-        User user2 = new User(2L, "jenny_34", "jane.smith@example.com", "$2a$10$QK3b7pQh6XZ2mQzLWZj2Ou", Timestamp.valueOf("2009-10-04 20:00:24"), Timestamp.valueOf("2008-01-12 13:49:03"));
+        User user1 = new User(1L, "alex123", "sarah.jones@example.com", "$2a$10$V6v2wq4JQFV2mQzLWZj2Ou");
+        User user2 = new User(2L, "jenny_34", "jane.smith@example.com", "$2a$10$QK3b7pQh6XZ2mQzLWZj2Ou");
         List<User> userList = Arrays.asList(user1, user2);
 
         when(userRepository.findAll()).thenReturn(userList);

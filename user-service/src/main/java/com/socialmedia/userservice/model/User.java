@@ -1,6 +1,8 @@
 package com.socialmedia.userservice.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
 
@@ -14,19 +16,23 @@ public class User {
     private String username;
     private String email;
     private String password_hash;
+
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
     private Timestamp created_at;
+
+    @Column(nullable = false)
+    @UpdateTimestamp
     private Timestamp updated_at;
 
     public User() {
     }
 
-    public User(Long id, String username, String email, String password_hash, Timestamp created_at, Timestamp updated_at) {
+    public User(Long id, String username, String email, String password_hash) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password_hash = password_hash;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
     }
 
     public Long getId() {
@@ -65,15 +71,7 @@ public class User {
         return created_at;
     }
 
-    public void setCreated_at(Timestamp created_at) {
-        this.created_at = created_at;
-    }
-
     public Timestamp getUpdated_at() {
         return updated_at;
-    }
-
-    public void setUpdated_at(Timestamp updated_at) {
-        this.updated_at = updated_at;
     }
 }
