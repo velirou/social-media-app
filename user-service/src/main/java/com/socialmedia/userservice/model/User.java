@@ -15,7 +15,9 @@ public class User {
     private Long id;
     private String username;
     private String email;
-    private String password_hash;
+
+    @Column(name = "password_hash")
+    private String passwordHash;
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
@@ -32,7 +34,7 @@ public class User {
         this.id = id;
         this.username = username;
         this.email = email;
-        this.password_hash = password_hash;
+        this.passwordHash = password_hash;
     }
 
     public Long getId() {
@@ -59,12 +61,12 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword_hash() {
-        return password_hash;
+    public String getPasswordHash() {
+        return passwordHash;
     }
 
-    public void setPassword_hash(String password_hash) {
-        this.password_hash = password_hash;
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
     public Timestamp getCreated_at() {

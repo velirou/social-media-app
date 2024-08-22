@@ -5,7 +5,6 @@ import com.socialmedia.userservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +31,7 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         user.setUsername(userDetails.getUsername());
         user.setEmail(userDetails.getEmail());
-        user.setPassword_hash(userDetails.getPassword_hash());
+        user.setPasswordHash(userDetails.getPasswordHash());
         return userRepository.save(user);
     }
 
