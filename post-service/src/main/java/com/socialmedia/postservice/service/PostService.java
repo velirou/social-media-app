@@ -1,5 +1,6 @@
 package com.socialmedia.postservice.service;
 
+import com.socialmedia.postservice.client.UserClient;
 import com.socialmedia.postservice.model.Post;
 import com.socialmedia.postservice.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ public class PostService {
     @Autowired
     private PostRepository postRepository;
 
+    @Autowired
+    private UserClient userClient;
+
     public List<Post> getAllPosts() {
         return postRepository.findAll();
     }
@@ -24,6 +28,9 @@ public class PostService {
 
 
     public Post createPost(Post post) {
+        if (userClient.getUserById(post.getUserId()) == null) {
+            throw new IllegalArgumentException("Invalid user ID");
+        }
         return postRepository.save(post);
     }
 

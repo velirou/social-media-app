@@ -7,14 +7,14 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "posts", schema = "user-service")
+@Table(name = "posts", schema = "post-service")
 public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long userId;
     private String content;
+    private Long userId;
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp

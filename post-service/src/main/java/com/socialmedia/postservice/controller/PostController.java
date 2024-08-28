@@ -1,8 +1,10 @@
 package com.socialmedia.postservice.controller;
 
+import com.socialmedia.postservice.client.UserClient;
 import com.socialmedia.postservice.model.Post;
 import com.socialmedia.postservice.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,8 +28,9 @@ public class PostController {
     }
 
     @PostMapping
-    public Post createPost(@RequestBody Post post) {
-        return postService.createPost(post);
+    public ResponseEntity<Post> createPost(@RequestBody Post post) {
+        Post createdPost = postService.createPost(post);
+        return ResponseEntity.ok(createdPost);
     }
 
     @PutMapping(path = "/{id}")

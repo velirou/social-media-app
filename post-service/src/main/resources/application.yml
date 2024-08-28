@@ -2,7 +2,7 @@ spring:
   application:
     name: postservice
   datasource:
-    url: jdbc:postgresql://localhost:5432/user-service
+    url: jdbc:postgresql://localhost:5432/post-service
     username:
     password:
     driver-class-name: org.postgresql.Driver
@@ -12,13 +12,13 @@ spring:
       show-sql: true
       properties:
         hibernate:
-          default_schema: user-service
+          default_schema: post-service
 server:
   port: 8082
   servlet:
     context-path: /
-#logging:
-#  level:
-#    org:
-#      springframework: DEBUG
+logging:
+  level:
+    org:
+      springframework: DEBUG
 #      hibernate: DEBUG
