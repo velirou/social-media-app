@@ -13,6 +13,21 @@ spring:
       properties:
         hibernate:
           default_schema: post-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/social-media
+      client:
+        registration:
+          keycloak:
+            client-id: post-service-client
+            client-secret: w6GjdY7MMYHpuk9NwI4dNnhgbFi8oxtf
+            authorization-grant-type: client_credentials
+            scope: openid
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8080/realms/social-media
 server:
   port: 8082
   servlet:

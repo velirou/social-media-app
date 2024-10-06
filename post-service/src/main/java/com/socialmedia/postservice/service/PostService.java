@@ -1,10 +1,13 @@
 package com.socialmedia.postservice.service;
 
-import com.socialmedia.postservice.client.UserClient;
+import com.socialmedia.postservice.client.UserServiceClient;
 import com.socialmedia.postservice.model.Post;
 import com.socialmedia.postservice.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +19,7 @@ public class PostService {
     private PostRepository postRepository;
 
     @Autowired
-    private UserClient userClient;
+    private UserServiceClient userServiceClient;
 
     public List<Post> getAllPosts() {
         return postRepository.findAll();
@@ -26,12 +29,20 @@ public class PostService {
         return postRepository.findById(id);
     }
 
+    public List<Post> getPostsByUsername(Long userId) {
+            return postRepository.findAllByUserId(userId);
+    }
 
-    public Post createPost(Post post) {
-        if (userClient.getUserById(post.getUserId()) == null) {
-            throw new IllegalArgumentException("Invalid user ID");
+    public ResponseEntity<String> createPost(Post post) {
+        Long userId = post.getUserId();
+        Boolean userExists = userServiceClient.checkUserExists(userId);
+
+        if (!userExists) {
+            return ResponseEntity.status(404).body("User not found, cannot create post");
+        } else {
+            postRepository.save(post);
+            return ResponseEntity.ok("Post created successfully");
         }
-        return postRepository.save(post);
     }
 
     public Post updatePost(Long id, Post postDetails) {

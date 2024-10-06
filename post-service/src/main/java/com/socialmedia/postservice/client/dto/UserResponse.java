@@ -7,7 +7,6 @@ public class UserResponse {
     private Long id;
     private String username;
     private String email;
-    private String passwordHash;
     private Timestamp created_at;
     private Timestamp updated_at;
 
@@ -33,14 +32,6 @@ public class UserResponse {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
     }
 
     public Timestamp getCreated_at() {

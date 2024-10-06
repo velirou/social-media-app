@@ -1,6 +1,6 @@
 package com.socialmedia.postservice.controller;
 
-import com.socialmedia.postservice.client.UserClient;
+import com.socialmedia.postservice.client.UserServiceClient;
 import com.socialmedia.postservice.model.Post;
 import com.socialmedia.postservice.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,9 @@ public class PostController {
     @Autowired
     private PostService postService;
 
+    @Autowired
+    private UserServiceClient userServiceClient;
+
     @GetMapping
     public List<Post> getAllPosts() {
         return postService.getAllPosts();
@@ -27,10 +30,15 @@ public class PostController {
         return postService.getPostById(id);
     }
 
-    @PostMapping
-    public ResponseEntity<Post> createPost(@RequestBody Post post) {
-        Post createdPost = postService.createPost(post);
-        return ResponseEntity.ok(createdPost);
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Post>> getPostsByUserId(@PathVariable Long userId) {
+        List<Post> posts = postService.getPostsByUsername(userId);
+        return ResponseEntity.ok(posts);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<String> createPost(@RequestBody Post post) {
+        return postService.createPost(post);
     }
 
     @PutMapping(path = "/{id}")
@@ -43,4 +51,3 @@ public class PostController {
         postService.deletePost(id);
     }
 }
-

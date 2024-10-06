@@ -3,6 +3,7 @@ package com.socialmedia.userservice.controller;
 import com.socialmedia.userservice.model.User;
 import com.socialmedia.userservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,13 @@ public class UserController {
     @GetMapping(path = "/{id}")
     public Optional<User> getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
+    }
+
+    @GetMapping("/{userId}/exists")
+    public ResponseEntity<Boolean> checkUserExists(@PathVariable Long userId) {
+        // Call the service method to check if the user exists
+        boolean exists = userService.userExists(userId);
+        return ResponseEntity.ok(exists);
     }
 
     @PostMapping

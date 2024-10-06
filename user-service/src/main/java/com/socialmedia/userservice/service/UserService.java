@@ -22,6 +22,10 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    public boolean userExists(Long userId) {
+        // Check if the user exists by their ID
+        return userRepository.existsById(userId);
+    }
 
     public User createUser(User user) {
         return userRepository.save(user);
@@ -31,7 +35,6 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         user.setUsername(userDetails.getUsername());
         user.setEmail(userDetails.getEmail());
-        user.setPasswordHash(userDetails.getPasswordHash());
         return userRepository.save(user);
     }
 

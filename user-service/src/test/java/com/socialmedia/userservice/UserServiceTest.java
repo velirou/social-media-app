@@ -3,8 +3,6 @@ package com.socialmedia.userservice;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,8 +33,8 @@ public class UserServiceTest {
     @Test
     public void testGetAllUsers() {
         // Arrange
-        User user1 = new User(1L, "alex123", "sarah.jones@example.com", "$2a$10$V6v2wq4JQFV2mQzLWZj2Ou");
-        User user2 = new User(2L, "jenny_34", "jane.smith@example.com", "$2a$10$QK3b7pQh6XZ2mQzLWZj2Ou");
+        User user1 = new User(1L, "alex123", "sarah.jones@example.com");
+        User user2 = new User(2L, "jenny_34", "jane.smith@example.com");
         List<User> userList = Arrays.asList(user1, user2);
 
         when(userRepository.findAll()).thenReturn(userList);
