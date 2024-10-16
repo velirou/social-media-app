@@ -1,0 +1,50 @@
+server:
+  port: 8083  # Port for the API Gateway
+
+spring:
+  application:
+    name: api-gateway
+
+# Configure routes using Kubernetes DNS-based service discovery
+  cloud:
+    gateway:
+      routes:
+        # Route for User Service
+        - id: user-service
+          uri: http://user-service:8081  # Kubernetes DNS-based service discovery
+          predicates:
+            - Path=/api/users/**   # Routes requests starting with /api/users to the user service
+          filters:
+            - AddRequestHeader=X-Forwarded-By, ApiGateway  # Add a custom header
+
+        # Route for Post Service
+        - id: post-service
+          uri: http://post-service:8082  # Kubernetes DNS-based service discovery
+          predicates:
+            - Path=/api/posts/**  # Routes requests starting with /api/posts to the post service
+          filters:
+            - AddRequestHeader=X-Forwarded-By, ApiGateway  # Add a custom header
+
+      # Optional: Global default filters (like adding headers, logging, etc.)
+      default-filters:
+        - name: AddResponseHeader
+          args:
+            name: X-Response-Time
+            value: 'Elapsed time: %{response-time}'
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/social-media
+
+# Configure logging (optional, but helpful for debugging)
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+
+# Spring Cloud Gateway Actuator (Optional, for monitoring)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: gateway
