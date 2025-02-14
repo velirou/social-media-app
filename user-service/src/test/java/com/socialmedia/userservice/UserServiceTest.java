@@ -1,11 +1,5 @@
 package com.socialmedia.userservice;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import java.util.Arrays;
-import java.util.List;
-
 import com.socialmedia.userservice.model.User;
 import com.socialmedia.userservice.repository.UserRepository;
 import com.socialmedia.userservice.service.UserService;
@@ -15,6 +9,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class UserServiceTest {
