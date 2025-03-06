@@ -1,31 +1,57 @@
 package com.socialmedia.apigateway.config;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.InMemoryReactiveClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.web.server.SecurityWebFilterChain;
 
-@Configuration
+import static org.springframework.security.config.Customizer.withDefaults;
+
+@EnableWebFluxSecurity
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // Define which endpoints require authentication and authorization
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         http
-                .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/users/public", "/api/posts/public").permitAll()  // Allow public endpoints
-                        .anyRequest().authenticated()  // All other endpoints require authentication
+                .authorizeExchange(exchanges -> exchanges
+                        .pathMatchers("/api/**").authenticated()  // Secure API endpoints with JWT
+                        .pathMatchers("/oauth2/**").permitAll()  // Allow OAuth2 login endpoints
+                        .anyExchange().denyAll()  // Deny everything else
                 )
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> {
-                    jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter());
-                }));
+                .oauth2Login(withDefaults())  // Enable OAuth2 login for UI
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt.jwkSetUri("http://localhost:8080/realms/social-media/protocol/openid-connect/certs"))
+                );
+
         return http.build();
     }
 
-    private JwtAuthenticationConverter jwtAuthenticationConverter() {
-        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-        // Custom JWT converter can be added here if needed
-        return converter;
+
+
+
+    @Bean
+    public ReactiveClientRegistrationRepository clientRegistrationRepository() {
+        ClientRegistration registration = ClientRegistration
+                .withRegistrationId("keycloak")
+                .clientId("apigateway-client")
+                .clientSecret("YrH1iZmCVT6LcZWNCftTLnbXUswdOgMz")
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .redirectUri("{baseUrl}/login/oauth2/code/{registrationId}")                .scope("openid", "profile", "email")
+                .authorizationUri("http://localhost:8080/realms/social-media/protocol/openid-connect/auth")
+                .tokenUri("http://localhost:8080/realms/social-media/protocol/openid-connect/token")
+                .userInfoUri("http://localhost:8080/realms/social-media/protocol/openid-connect/userinfo")
+                .jwkSetUri("http://localhost:8080/realms/social-media/protocol/openid-connect/certs")
+                .userNameAttributeName("sub")
+                .clientName("Keycloak")
+                .build();
+
+        return new InMemoryReactiveClientRegistrationRepository(registration);
     }
 }

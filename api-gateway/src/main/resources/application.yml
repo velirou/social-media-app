@@ -1,50 +1,50 @@
 server:
-  port: 8083  # Port for the API Gateway
+  port: 8000  # API Gateway port
 
 spring:
   application:
     name: api-gateway
 
-# Configure routes using Kubernetes DNS-based service discovery
   cloud:
     gateway:
       routes:
-        # Route for User Service
         - id: user-service
-          uri: http://user-service:8081  # Kubernetes DNS-based service discovery
+          uri: http://localhost:8081
           predicates:
-            - Path=/api/users/**   # Routes requests starting with /api/users to the user service
+            - Path=/api/users/**
           filters:
-            - AddRequestHeader=X-Forwarded-By, ApiGateway  # Add a custom header
+            - TokenRelay=
 
-        # Route for Post Service
         - id: post-service
-          uri: http://post-service:8082  # Kubernetes DNS-based service discovery
+          uri: http://localhost:8082
           predicates:
-            - Path=/api/posts/**  # Routes requests starting with /api/posts to the post service
+            - Path=/api/posts/**
           filters:
-            - AddRequestHeader=X-Forwarded-By, ApiGateway  # Add a custom header
+            - TokenRelay=
 
-      # Optional: Global default filters (like adding headers, logging, etc.)
-      default-filters:
-        - name: AddResponseHeader
-          args:
-            name: X-Response-Time
-            value: 'Elapsed time: %{response-time}'
   security:
     oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:8080/realms/social-media
+      client:
+        registration:
+          keycloak:
+            client-id: apigateway-client
+            client-secret: YrH1iZmCVT6LcZWNCftTLnbXUswdOgMz
+            scope: openid,profile,email
+            authorization-grant-type: authorization_code
+            redirectUri: "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8080/realms/social-media
 
-# Configure logging (optional, but helpful for debugging)
+# Enable debugging logs for troubleshooting
 logging:
   level:
-    org.springframework.cloud.gateway: DEBUG
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.security: DEBUG
 
-# Spring Cloud Gateway Actuator (Optional, for monitoring)
+# Enable Spring Boot Actuator for monitoring
 management:
   endpoints:
     web:
       exposure:
-        include: gateway
+        include: gateway, health, info
